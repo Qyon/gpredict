@@ -9,7 +9,7 @@ VERSION_SHORT = $(GITMAJ).$(GITMIN).$(GITBLD)
 VERSION_LONG = $(GITMAJ).$(GITMIN).0.$(GITBLD)
 
 # cross-compiler prefix
-MGW_PREFIX=i686-w64-mingw32-
+MGW_PREFIX=x86_64-w64-mingw32-
 
 # directories
 topsrc = ..
@@ -18,7 +18,7 @@ sgpsdpdir = $(gpreddir)/sgpsdp
 nxjsondir = $(gpreddir)/nxjson
 
 # tools
-CC = $(MGW_PREFIX)gcc -Wall -O2 -mms-bitfields -DWIN32 -m32
+CC = $(MGW_PREFIX)gcc -Wall -O2 -mms-bitfields -DWIN32 
 AS = $(MGW_PREFIX)as
 DLLWRAP = $(MGW_PREFIX)dllwrap
 DLLWRAP_FLAGS = --as=$(AS) --export-all --driver-name $(CC) -s
@@ -30,13 +30,13 @@ RCFLAGS = --define __WIN32__ --define __WIN95__ --define MSRC --define __GNUWIN3
 # libraries
 GTKLIBS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --libs gtk+-3.0)
 GLIBLIB := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --libs glib-2.0 gthread-2.0)
-GOOLIBS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --libs goocanvas-2.0)
+GOOLIBS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --libs goocanvas-3.0)
 GUI_LIBS = $(GTKLIBS) $(GLIBLIB) $(GOOLIBS) libsgpsdp.lib -lwinmm -lwininet -lws2_32
 LIBS = -lm
 
 # flags/defines
 GTK_CFLAGS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --cflags gtk+-3.0)
-GOO_CFLAGS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --cflags goocanvas-2.0)
+GOO_CFLAGS := $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --define-prefix --cflags goocanvas-3.0)
 CFLAGS = -DVERSION_SHORT=$(VERSION_SHORT) -DHAVE_CONFIG_H -DPACKAGE_LOCALE_DIR=\"/\" -I. -I.. -I$(gpreddir) $(GOO_CFLAGS)
 
 # source paths
@@ -205,8 +205,12 @@ gpredict-$(GITMAJ).$(GITMIN).$(GITBLD).zip: all
 	cp -rp $(GTKETC) gpredict
 	mkdir -p gpredict/share/glib-2.0
 	cp -rp $(SCHEMAS) gpredict/share/glib-2.0
+	glib-compile-schemas gpredict/share/glib-2.0/schemas/
+	mkdir -p gpredict/share/icons/Adwaita
+	cp $(ICONS_ADWAITA)/index.theme gpredict/share/icons/Adwaita/
+	cp -rp $(ICONS_ADWAITA)/scalable/ gpredict/share/icons/Adwaita/scalable/
 	zip -r $@ gpredict
-	rm -rf gpredict
+	#rm -rf gpredict
 
 # Use -mconsole to always open a console window when gpredicxt is started
 # Use -mwindows for no console

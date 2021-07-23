@@ -12,7 +12,7 @@
 # (thanks GNOME for missing crucial bits out of builds). My versions
 # are in this folder, and will need unpack paths inserting.
 
-MINGW_ROOT=../../mingw32
+MINGW_ROOT=/opt/mingw32/mingw64
 #MINGW_ROOT=../../../tmp/mingw32
 
 PKG_CONFIG_PATH = "$(abspath $(MINGW_ROOT)/lib/pkgconfig)"
@@ -20,7 +20,9 @@ PKG_CONFIG_PATH = "$(abspath $(MINGW_ROOT)/lib/pkgconfig)"
 # binary dependencies to be deployed with gpredict.exe
 BINDEPS = \
 	$(wildcard $(MINGW_ROOT)/bin/*.dll) \
-	$(MINGW_ROOT)/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.dll
+  $(MINGW_ROOT)/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.dll \
+  $(MINGW_ROOT)/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-png.dll \
+  $(MINGW_ROOT)/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-ico.dll
 
 # where to put the loaders.cache file
 LOADERS = lib/gdk-pixbuf-2.0/2.10.0
@@ -28,6 +30,7 @@ LOADERS = lib/gdk-pixbuf-2.0/2.10.0
 # other miscellaneous folders to deploy with the binary
 GTKETC  = $(MINGW_ROOT)/etc
 SCHEMAS = $(MINGW_ROOT)/share/glib-2.0/schemas
+ICONS_ADWAITA = $(MINGW_ROOT)/share/icons/Adwaita
 
 # Autoversioning from nearest git tag, assumes v<x>.<y> tag format.
 
