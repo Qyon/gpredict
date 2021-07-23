@@ -81,6 +81,7 @@ struct _gtk_rot_ctrl {
         gboolean    new_trg;    /* new target position set */
         gboolean    running;
         gboolean    io_error;
+        gboolean    mutex_initialized;
     } client;
 };
 

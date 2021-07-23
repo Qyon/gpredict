@@ -1552,6 +1552,7 @@ static void gtk_rot_ctrl_init(GtkRotCtrl * ctrl,
     ctrl->errcnt = 0;
 
     g_mutex_init(&ctrl->client.mutex);
+    ctrl->client.mutex_initialized = TRUE;
     ctrl->client.thread = NULL;
     ctrl->client.socket = -1;
     ctrl->client.running = FALSE;
@@ -1582,7 +1583,11 @@ static void gtk_rot_ctrl_destroy(GtkWidget * widget)
         g_thread_join(ctrl->client.thread);
     }
 
-    g_mutex_clear(&ctrl->client.mutex);
+    if (ctrl->client.mutex_initialized == TRUE) {
+        g_mutex_clear(&ctrl->client.mutex);
+        ctrl->client.mutex_initialized = FALSE;
+    }
+
 
     (*GTK_WIDGET_CLASS(parent_class)->destroy) (widget);
 }
