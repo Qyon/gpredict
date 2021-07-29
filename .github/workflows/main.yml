@@ -39,7 +39,7 @@ jobs:
         run: echo "::set-output name=filename::gpredict-$(git describe|cut -d "-" -f -2|cut -c 2-|tr '-' '.').zip"
          
       - name: Install build tools
-        run: sudo apt-get install mingw-w64-tools libtool intltool autoconf automake pkg-config mingw-w64 unzip 
+        run: sudo apt-get install mingw-w64-tools libtool intltool autoconf automake pkg-config mingw-w64 unzip wget zstd libglib2.0-dev zip
       
       - name: Cache mingw
         id: cache-mingw
@@ -77,5 +77,3 @@ jobs:
           asset_name: ${{ steps.out_file_name.outputs.filename }}
           asset_content_type: application/octet-stream
           
-
-
