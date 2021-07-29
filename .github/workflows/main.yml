@@ -33,6 +33,12 @@ jobs:
       - name: Get git describe version
         id: describe
         run: echo "::set-output name=version::$(git describe)"
+        
+      - name: Install build tools
+        run: sudo apt-get install mingw-w64-tools libtool intltool autoconf automake pkg-config mingw-w64 unzip 
+      
+      - name: Prepare mingw
+        run: sudo mkdir -p /opt/mingw32/ && ./win32/get_msys2_packages.sh
 
       - name: Create Release
         id: create_release
