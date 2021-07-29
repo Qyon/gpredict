@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-          with:
+        with:
             fetch-depth: 0
       - name: Get current date
         id: date
