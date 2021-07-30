@@ -1,3 +1,4 @@
+https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libwinpthread-git-9.0.0.6246.ae63cde27-1-any.pkg.tar.zst
 https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libdatrie-0.2.12-1-any.pkg.tar.xz
 https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-shared-mime-info-2.1-1-any.pkg.tar.zst
 https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-adwaita-icon-theme-40.0-1-any.pkg.tar.zst
