@@ -33,6 +33,27 @@ jobs:
       - name: Get git describe version
         id: describe
         run: echo "::set-output name=version::$(git describe)"
+        
+      - name: Get output_file_name
+        id: out_file_name
+        run: echo "::set-output name=filename::gpredict-$(git describe|cut -d "-" -f -2|cut -c 2-|tr '-' '.').zip"
+         
+      - name: Install build tools
+        run: sudo apt-get install mingw-w64-tools libtool intltool autoconf automake pkg-config mingw-w64 unzip 
+      
+      - name: Cache mingw
+        id: cache-mingw
+        uses: actions/cache@v2
+        with:
+          path: /opt/mingw32/
+          key: ${{ runner.os }}-mingw-${{ hashFiles('win32/msys2packages.txt') }}
+
+      - name: Prepare mingw
+        if: steps.cache-mingw.outputs.cache-hit != 'true'
+        run: sudo mkdir -p /opt/mingw32/ && (cd win32 && sh ./get_msys2_packages.sh)
+        
+      - name: Build dist packages
+        run: (cd win32 && make dist)
 
       - name: Create Release
         id: create_release
@@ -44,3 +65,17 @@ jobs:
           release_name: Build ${{ steps.describe.outputs.version }} ${{ steps.date.outputs.date }}
           draft: false
           prerelease: true
+          
+      - name: Upload dist package
+        id: upload-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: win32/${{ steps.out_file_name.outputs.filename }}
+          asset_name: ${{ steps.out_file_name.outputs.filename }}
+          asset_content_type: application/octet-stream
+          
+
+
