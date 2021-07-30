@@ -11,6 +11,6 @@ do
     exit
    fi
   wget $i -O tmp.tar.zst
-  tar -I zstd -xvf tmp.tar.zst
+  tar -I zstd -xf tmp.tar.zst
   rm tmp.tar.zst
 done  
