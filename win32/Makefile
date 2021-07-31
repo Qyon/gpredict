@@ -9,7 +9,11 @@ VERSION_SHORT = $(GITMAJ).$(GITMIN).$(GITBLD)
 VERSION_LONG = $(GITMAJ).$(GITMIN).0.$(GITBLD)
 
 # cross-compiler prefix
-MGW_PREFIX=x86_64-w64-mingw32-
+ifdef WINDOWS32BIT
+	MGW_PREFIX=i686-w64-mingw32-
+else
+	MGW_PREFIX=x86_64-w64-mingw32-
+endif
 
 # directories
 topsrc = ..
@@ -183,7 +187,15 @@ GPREDICTOBJ = $(GPREDICTSRC:.c=.o)
 
 OBJS = $(SGPSDPOBJ) $(NXJSONOBJ) $(GPREDICTOBJ)
 
-DST_DIR = gpredict-$(GITMAJ).$(GITMIN).$(GITBLD)
+
+
+
+ifdef WINDOWS32BIT
+	DST_DIR = gpredict-windows-32bit-$(GITMAJ).$(GITMIN).$(GITBLD)
+else
+	DST_DIR = gpredict-windows-64bit-$(GITMAJ).$(GITMIN).$(GITBLD)
+endif
+
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(GTK_CFLAGS) $<

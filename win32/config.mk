@@ -12,8 +12,11 @@
 # (thanks GNOME for missing crucial bits out of builds). My versions
 # are in this folder, and will need unpack paths inserting.
 
-MINGW_ROOT=/opt/mingw32/mingw64
-#MINGW_ROOT=../../../tmp/mingw32
+ifdef WINDOWS32BIT
+	MINGW_ROOT=/opt/mingw32/mingw32
+else
+	MINGW_ROOT=/opt/mingw32/mingw64
+endif
 
 PKG_CONFIG_PATH = "$(abspath $(MINGW_ROOT)/lib/pkgconfig)"
 

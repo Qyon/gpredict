@@ -34,10 +34,14 @@ jobs:
         id: describe
         run: echo "::set-output name=version::$(git describe)"
         
-      - name: Get output_file_name
-        id: out_file_name
-        run: echo "::set-output name=filename::gpredict-$(git describe|cut -d "-" -f -2|cut -c 2-|tr '-' '.').zip"
-         
+      - name: Get output_file_name 64bit
+        id: out_file_name_64bit
+        run: echo "::set-output name=filename::gpredict-windows-64bit-$(git describe|cut -d "-" -f -2|cut -c 2-|tr '-' '.').zip"
+
+      - name: Get output_file_name 32bit
+        id: out_file_name_32bit
+        run: echo "::set-output name=filename::gpredict-windows-32bit-$(git describe|cut -d "-" -f -2|cut -c 2-|tr '-' '.').zip"
+
       - name: Install build tools
         run: sudo apt-get install mingw-w64-tools libtool intltool autoconf automake pkg-config mingw-w64 unzip wget zstd libglib2.0-dev zip
       
@@ -50,10 +54,13 @@ jobs:
 
       - name: Prepare mingw
         if: steps.cache-mingw.outputs.cache-hit != 'true'
-        run: sudo mkdir -p /opt/mingw32/ && (cd win32 && sh ./get_msys2_packages.sh)
+        run: sudo mkdir -p /opt/mingw32/ && (cd win32 && bash ./get_msys2_packages.sh)
         
-      - name: Build dist packages
-        run: (cd win32 && make dist)
+      - name: Build dist packages 64 bit
+        run: (mkdir out && cd win32 && make clean && make dist && cp ${{ steps.out_file_name_64bit.outputs.filename }} ../out/${{ steps.out_file_name_64bit.outputs.filename }} )
+
+      - name: Build dist packages 32 bit
+        run: (cd win32 && make clean && make dist WINDOWS32BIT=1 && cp ${{ steps.out_file_name_32bit.outputs.filename }} ../out/${{ steps.out_file_name_32bit.outputs.filename }} )
 
       - name: Create Release
         id: create_release
@@ -66,14 +73,24 @@ jobs:
           draft: false
           prerelease: true
           
-      - name: Upload dist package
+      - name: Upload dist package 64 bit
+        id: upload-zip2
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: out/${{ steps.out_file_name_64bit.outputs.filename }}
+          asset_name: ${{ steps.out_file_name_64bit.outputs.filename }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload dist package 32 bit
         id: upload-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: win32/${{ steps.out_file_name.outputs.filename }}
-          asset_name: ${{ steps.out_file_name.outputs.filename }}
+          asset_path: out/${{ steps.out_file_name_32bit.outputs.filename }}
+          asset_name: ${{ steps.out_file_name_32bit.outputs.filename }}
           asset_content_type: application/octet-stream
-          

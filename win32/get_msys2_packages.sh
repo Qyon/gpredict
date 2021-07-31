@@ -9,8 +9,15 @@ do
   if [ "$i" == "#" ];
   then
     exit
-   fi
-  wget $i -O tmp.tar.zst
-  tar -xf tmp.tar.zst
-  rm tmp.tar.zst
+  fi
+  wget -nv $i -O tmp.tar.zst
+  if [ "x$?" == "x0" ];
+  then
+    echo "Unpacking..."
+    tar -xf tmp.tar.zst
+    rm tmp.tar.zst
+  else
+    echo "Error while downloading file!"
+    exit 1
+  fi
 done  
