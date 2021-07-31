@@ -18,7 +18,7 @@ sgpsdpdir = $(gpreddir)/sgpsdp
 nxjsondir = $(gpreddir)/nxjson
 
 # tools
-CC = $(MGW_PREFIX)gcc -Wall -O2 -mms-bitfields -DWIN32 
+CC = $(MGW_PREFIX)gcc -Wall -O2 -mms-bitfields -DWIN32
 AS = $(MGW_PREFIX)as
 DLLWRAP = $(MGW_PREFIX)dllwrap
 DLLWRAP_FLAGS = --as=$(AS) --export-all --driver-name $(CC) -s
@@ -183,6 +183,8 @@ GPREDICTOBJ = $(GPREDICTSRC:.c=.o)
 
 OBJS = $(SGPSDPOBJ) $(NXJSONOBJ) $(GPREDICTOBJ)
 
+DST_DIR = gpredict-$(GITMAJ).$(GITMIN).$(GITBLD)
+
 %.o: %.c
 	$(CC) -c $(CFLAGS) $(GTK_CFLAGS) $<
 	$(CC) -MM $(CFLAGS) $(GTK_CFLAGS) $< > $*.d 
@@ -192,25 +194,24 @@ OBJS = $(SGPSDPOBJ) $(NXJSONOBJ) $(GPREDICTOBJ)
 
 all: libsgpsdp.dll gpredict.exe gpredict-con.exe
 
-dist: gpredict-$(GITMAJ).$(GITMIN).$(GITBLD).zip
+dist: $(DST_DIR).zip
 
-gpredict-$(GITMAJ).$(GITMIN).$(GITBLD).zip: all
-	mkdir -p gpredict/share/gpredict
-	cp -p libsgpsdp.dll gpredict.exe gpredict-con.exe $(BINDEPS) gpredict
-	cp -rp ../data gpredict/share/gpredict
-	cp -rp ../pixmaps gpredict/share/gpredict
-	cp -rp ../po gpredict/share/gpredict
-	mkdir -p gpredict/$(LOADERS)
-	cp -p loaders.cache gpredict/$(LOADERS)
-	cp -rp $(GTKETC) gpredict
-	mkdir -p gpredict/share/glib-2.0
-	cp -rp $(SCHEMAS) gpredict/share/glib-2.0
-	glib-compile-schemas gpredict/share/glib-2.0/schemas/
-	mkdir -p gpredict/share/icons/Adwaita
-	cp $(ICONS_ADWAITA)/index.theme gpredict/share/icons/Adwaita/
-	cp -rp $(ICONS_ADWAITA)/scalable/ gpredict/share/icons/Adwaita/scalable/
-	zip -r $@ gpredict
-	#rm -rf gpredict
+$(DST_DIR).zip: all
+	mkdir -p $(DST_DIR)/share/gpredict
+	cp -p libsgpsdp.dll gpredict.exe gpredict-con.exe $(BINDEPS) $(DST_DIR)
+	cp -rp ../data $(DST_DIR)/share/gpredict
+	cp -rp ../pixmaps $(DST_DIR)/share/gpredict
+	cp -rp ../po $(DST_DIR)/share/gpredict
+	mkdir -p $(DST_DIR)/$(LOADERS)
+	cp -p loaders.cache $(DST_DIR)/$(LOADERS)
+	cp -rp $(GTKETC) $(DST_DIR)
+	mkdir -p $(DST_DIR)/share/glib-2.0
+	cp -rp $(SCHEMAS) $(DST_DIR)/share/glib-2.0
+	glib-compile-schemas $(DST_DIR)/share/glib-2.0/schemas/
+	mkdir -p $(DST_DIR)/share/icons/Adwaita
+	cp $(ICONS_ADWAITA)/index.theme $(DST_DIR)/share/icons/Adwaita/
+	cp -rp $(ICONS_ADWAITA)/scalable/ $(DST_DIR)/share/icons/Adwaita/scalable/
+	zip -r $@ $(DST_DIR)
 
 # Use -mconsole to always open a console window when gpredicxt is started
 # Use -mwindows for no console
@@ -233,5 +234,5 @@ libsgpsdp.dll:  $(SGPSDPOBJ)
 
 clean:
 	rm -f *.o *.d *.def *.a *.lib *.dll *.exe *.zip
-	rm -rf gpredict
+	rm -rf gpredict-*
 
