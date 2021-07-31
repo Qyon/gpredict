@@ -41,3 +41,7 @@ GPATH
 .cproject
 .project
 .settings
+*.o
+*.d
+*.zip
+win32/gpredict-*
