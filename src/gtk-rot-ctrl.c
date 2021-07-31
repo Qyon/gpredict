@@ -1688,6 +1688,9 @@ GtkWidget      *gtk_rot_ctrl_new(GtkSatModule * module)
     gtk_box_pack_start(GTK_BOX(rot_ctrl), table, FALSE, FALSE, 5);
     gtk_container_set_border_width(GTK_CONTAINER(rot_ctrl), 5);
 
+    if (rot_ctrl->timerid > 0)
+        g_source_remove(rot_ctrl->timerid);
+
     rot_ctrl->timerid = g_timeout_add(rot_ctrl->delay,
                                       rot_ctrl_timeout_cb, rot_ctrl);
 
