@@ -739,7 +739,7 @@ static void track_toggle_cb(GtkToggleButton * button, gpointer data)
 static gboolean rot_ctrl_timeout_cb(gpointer data)
 {
     GtkRotCtrl     *ctrl = GTK_ROT_CTRL(data);
-    gdouble         rotaz = 0.0, rotel = 0.0;
+    gdouble         rotaz = 0.0, rotel = 0.0, rotaz_delta = 0.0, rotel_delta = 0.0;
     gdouble         setaz = 0.0, setel = 45.0;
     gchar          *text;
     gboolean        error = FALSE;
@@ -830,6 +830,9 @@ static gboolean rot_ctrl_timeout_cb(gpointer data)
             while (rotaz > 360.0)
                 rotaz -= 360.0;
 
+            rotaz_delta = rotaz - setaz;
+            rotel_delta = rotel - setel;
+
             if (error)
             {
                 gtk_label_set_text(GTK_LABEL(ctrl->AzRead), _("ERROR"));
@@ -840,10 +843,10 @@ static gboolean rot_ctrl_timeout_cb(gpointer data)
             else
             {
                 /* update display widgets */
-                text = g_strdup_printf("%.2f\302\260", rotaz);
+                text = g_strdup_printf("%.2f\302\260 [\316\224: %.2f\302\260]", rotaz, rotaz_delta);
                 gtk_label_set_text(GTK_LABEL(ctrl->AzRead), text);
                 g_free(text);
-                text = g_strdup_printf("%.2f\302\260", rotel);
+                text = g_strdup_printf("%.2f\302\260 [\316\224: %.2f\302\260]", rotel, rotel_delta);
                 gtk_label_set_text(GTK_LABEL(ctrl->ElRead), text);
                 g_free(text);
 
