@@ -116,6 +116,15 @@ static gint rotctld_socket_open(const gchar * host, gint port)
 #endif
         return -1;
     }
+#ifdef WIN32
+    DWORD timeout = 2 * 1000;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof timeout);
+#else
+    struct timeval tv;
+    tv.tv_sec = 2;
+    tv.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+#endif
 
     sat_log_log(SAT_LOG_LEVEL_DEBUG, _("%s: Connection opened to %s:%d"),
                 __func__, host, port);
