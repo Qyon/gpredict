@@ -49,6 +49,10 @@
 #include <math.h>
 #include <string.h>             /* strerror() */
 
+#ifndef WIN32
+#include <sys/time.h>
+#endif
+
 #include "compat.h"
 #include "gpredict-utils.h"
 #include "gtk-polar-plot.h"
