@@ -448,7 +448,8 @@ static gpointer rotctld_client_thread(gpointer data)
         }
 
         /* wait 100 ms before sending new command */
-        g_usleep(100000);
+        /* 50 ms SQ5RWU */
+        g_usleep(50000);
         if (!get_pos(ctrl, &azi, &ele))
             io_error = TRUE;
 
@@ -460,7 +461,8 @@ static gpointer rotctld_client_thread(gpointer data)
         g_mutex_unlock(&ctrl->client.mutex);
 
         /* ensure rotctl duty cycle stays below 50%, but wait at least 700 ms (TBC) */
-        elapsed_time = MAX(g_timer_elapsed(ctrl->client.timer, NULL), 0.7);
+        /* change do 50ms! SQ5RWU */
+        elapsed_time = MAX(g_timer_elapsed(ctrl->client.timer, NULL), 0.05);
         g_usleep(elapsed_time * 1e6);
     }
 
