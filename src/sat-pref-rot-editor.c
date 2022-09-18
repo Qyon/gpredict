@@ -206,7 +206,7 @@ static GtkWidget *create_editor_widgets(rotor_conf_t * conf)
     g_object_set(label, "xalign", 1.0, "yalign", 0.5, NULL);
     gtk_grid_attach(GTK_GRID(table), label, 0, 2, 1, 1);
 
-    port = gtk_spin_button_new_with_range(1024, 65535, 1);
+    port = gtk_spin_button_new_with_range(1, 65535, 1);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(port), 4533);
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(port), 0);
     gtk_widget_set_tooltip_text(port,
